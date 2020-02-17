@@ -28,16 +28,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     applicationVariants.all { variant ->
         variant.outputs.all {
             def buildType = variant.variantData.variantConfiguration.buildType.name
-            outputFileName = "shell-" + buildType + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
+            outputFileName = "uplibra-" + buildType + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
         }
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation rootProject.ext.publicDependencies.supportV4
+    implementation libs.fragment
 }

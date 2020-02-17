@@ -69,6 +69,16 @@
 
 ####################Android开发中需要保留的公共部分####################
 
+# AndroidX 防止混淆
+-keep class com.google.android.material.** {*;}
+-keep class androidx.** {*;}
+-keep public class * extends androidx.**
+-keep interface androidx.** {*;}
+-keep @androidx.annotation.Keep class *
+-keepclassmembers class * {
+    @androidx.annotation.Keep *;
+}
+
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}
 # 保留继承的support类
