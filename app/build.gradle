@@ -41,7 +41,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all {
             def buildType = variant.variantData.variantConfiguration.buildType.name
-            outputFileName = "uplibra-" + buildType + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
+            outputFileName = "shell-" + buildType + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
         }
     }
 }
