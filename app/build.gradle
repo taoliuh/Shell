@@ -4,6 +4,20 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+def gitCommit = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def gitBranch = {
+    // 优先用环境变量, 因为构建机用下列指令不能正常获取分支名字
+    def name = System.getenv("GIT_BRANCH")
+    if (name != null && name.length() > 0) {
+        return name.substring(name.indexOf("/") + 1) // 去掉前面的origin/
+    }
+    return 'git rev-parse --abbrev-ref HEAD'.execute([], project.rootDir).text.trim()
+}.call()
+
+def gitCommitTime = 'git show -s --format=%cd --date=format:%Y%m%d-%H:%M'.execute([], project.rootDir).text.trim()
+def gitCommitTimeFileName = 'git show -s --format=%cd --date=format:%Y%m%d-%H%M'.execute([], project.rootDir).text.trim()
+def branchName = project.hasProperty('BRANCH_NAME') ? BRANCH_NAME : gitBranch
+
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     defaultConfig {
@@ -40,8 +54,8 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def buildType = variant.variantData.variantConfiguration.buildType.name
-            outputFileName = "shell-" + buildType + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
+            // branchName可能包含地址的分隔线“/”，需要正确替换
+            outputFileName = outputFileName.replace("app", "shell-${defaultConfig.versionName}-${branchName.replace('/', "_")}-${gitCommit}-${gitCommitTimeFileName}")
         }
     }
 }
